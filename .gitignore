@@ -4,6 +4,7 @@ logs
 
 # Runtime data
 pids
+.env
 *.pid
 *.seed
 

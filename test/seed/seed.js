@@ -1,6 +1,8 @@
+require('dotenv').config();
+
 const configOptions = {
-  email: 'johndoe@oih.com',
-  password: 'Johny@Doe',
+  email: process.env.EMAIL,
+  password: process.env.PASSWORD,
 };
 
 const organizations = [{
