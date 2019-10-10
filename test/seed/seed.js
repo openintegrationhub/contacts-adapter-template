@@ -1,16 +1,6 @@
-const options = {
-  json: {
-    max_hits: 100,
-  },
-  headers: {
-    'X-API-KEY': 'acilfogux3h4xv5cilhiqskr8xo6ghhh',
-  },
-};
-
-// TODO: change credentials with oihtestaccount@oih.com
 const configOptions = {
-  email: 'oihtestaccount@oih.com', // 'admin@example.com',
-  password: 'OIHtest@', // 'somestring',
+  email: 'johndoe@oih.com',
+  password: 'Johny@Doe',
 };
 
 const organizations = [{
@@ -307,7 +297,6 @@ const persons = [{
 ];
 
 module.exports = {
-  options,
   configOptions,
   persons,
   organizations,
