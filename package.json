@@ -17,10 +17,10 @@
     "oih"
   ],
   "scripts": {
-    "lint-fix": "eslint lib test --ext .js --ext .json --fix",
+    "start": "node ./node_modules/elasticio-sailor-nodejs/run.js",
+    "pretest": "eslint lib test --ext .js --ext .json --fix",
     "test": "NODE_ENV=test mocha test/* --timeout 10000",
-    "test-watch": "nodemon --exec \"npm test \"",
-    "start": "node ./node_modules/elasticio-sailor-nodejs/run.js"
+    "test-watch": "nodemon --exec \"npm test \""
   },
   "engines": {
     "node": "8.6.0",
@@ -32,7 +32,6 @@
     "dotenv": "^8.1.0",
     "elasticio-node": "0.0.9",
     "elasticio-sailor-nodejs": "2.2.1",
-    "moment": "^2.24.0",
     "q": "^1.5.1",
     "request": "^2.88.0",
     "request-promise": "4.1.1"
@@ -52,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:openintegrationhub/snazzycontacts-adapter.git"
+    "url": "git@github.com:openintegrationhub/contacts-adapter-template.git"
   },
   "license": "Apache 2.0"
 }

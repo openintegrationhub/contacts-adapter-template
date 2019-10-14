@@ -1,7 +1,7 @@
+/* eslint no-unused-expressions: "off" */
+
 const { expect } = require('chai');
-const { getToken } = require('./../lib/utils/authentication');
 const { getEntries } = require('../lib/triggers/getPersonsPolling');
-const { getOrganizations } = require('../lib/triggers/getOrganizationsPolling');
 const {
   getPersonsSuccessful, getPersonsEmpty, getOrganizationsSuccessful, getOrganizationsEmpty,
 } = require('./seed/triggers.seed');

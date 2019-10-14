@@ -1,6 +1,7 @@
+/* eslint no-unused-expressions: "off" */
+
 const { expect } = require('chai');
-const { getToken } = require('./../lib/utils/authentication');
-const { upsertObject, checkIid } = require('../lib/utils/helpers');
+const { upsertObject, checkId } = require('../lib/utils/helpers');
 const { deletePerson } = require('../lib/actions/deletePerson');
 const { deleteOrganization } = require('../lib/actions/deleteOrganization');
 
@@ -238,12 +239,12 @@ describe('Actions - upsertPerson & upsertOrganization', () => {
   });
 
   it('should refuse to update or delete an object', async () => {
-    const valid = checkIid('1nbm1k1ke9b4o');
+    const valid = checkId('1nbm1k1ke9b4o');
     expect(valid).to.be.true;
   });
 
   it('should allow to update or delete an object', async () => {
-    const valid = checkIid('1nbm1k1ke9b4p');
+    const valid = checkId('1nbm1k1ke9b4p');
     expect(valid).to.be.false;
   });
 });
