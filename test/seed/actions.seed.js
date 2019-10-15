@@ -98,8 +98,6 @@ const createOrganizationFailed = nock('https://api.snazzycontacts.com/api/organi
   .post('')
   .reply(400, 'Data does not match schema!');
 
-// START
-
 const deleteOrganizationSuccessful = nock('https://api.snazzycontacts.com/api/organization/2jkwerjvdhswq2')
   .delete('')
   .reply(200, {
@@ -125,10 +123,6 @@ const deleteOrganizationFailed = nock('https://api.snazzycontacts.com/api/organi
 const deleteOrganizationNotFound = nock('https://api.snazzycontacts.com/api/organization/222222')
   .delete('')
   .reply(204);
-
-
-// END
-
 
 const getPerson = nock('https://api.snazzycontacts.com/api/person/25mop1jxq2ss3x')
   .get('')
