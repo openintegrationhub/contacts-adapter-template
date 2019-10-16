@@ -27,27 +27,27 @@
     "npm": ">=5.4"
   },
   "dependencies": {
-    "@wice-devs/cfm": "^1.0.6",
+    "@wice-devs/cfm": "1.0.6",
     "co": "4.6.0",
-    "dotenv": "^8.1.0",
+    "dotenv": "8.1.0",
     "elasticio-node": "0.0.9",
     "elasticio-sailor-nodejs": "2.2.1",
-    "q": "^1.5.1",
-    "request": "^2.88.0",
+    "q": "1.5.1",
+    "request": "2.88.0",
     "request-promise": "4.1.1"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^5.3.0",
+    "chai": "4.2.0",
+    "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-json": "^1.2.1",
-    "eslint-plugin-mocha": "^5.2.0",
-    "jenkins-mocha": "^6.0.0",
-    "mocha": "^5.2.0",
-    "nock": "^9.6.1",
-    "nyc": "^13.3.0",
-    "supertest": "^3.3.0"
+    "eslint-plugin-import": "2.17.2",
+    "eslint-plugin-json": "1.4.0",
+    "eslint-plugin-mocha": "5.3.0",
+    "jenkins-mocha": "6.0.0",
+    "mocha": "5.2.0",
+    "nock": "9.6.1",
+    "nyc": "13.3.0",
+    "supertest": "3.4.2"
   },
   "repository": {
     "type": "git",
