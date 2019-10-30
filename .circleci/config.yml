@@ -2,8 +2,7 @@ version: 2.1
 executors:
   docker-publisher:
     environment:
-      IMAGE_NAME: snazzy/contacts-adapter-template
-      # IMAGE_NAME: openintegrationhub/contacts-adapter-template
+      IMAGE_NAME: openintegrationhub/contacts-adapter-template
     docker:
       - image: circleci/node:8-stretch
 jobs:
@@ -55,7 +54,7 @@ jobs:
       - run:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push snazzy/contacts-adapter-template:latest
+            docker push openintegrationhub/contacts-adapter-template:latest
 workflows:
   version: 2
   build-master:
