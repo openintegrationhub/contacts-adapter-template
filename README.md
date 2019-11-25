@@ -1,6 +1,9 @@
 # contacts-adapter-template
 > Contacts Node.js adapter template for OIH platform
 
+[![CircleCI](https://circleci.com/gh/openintegrationhub/contacts-adapter-template.svg?style=svg)](https://circleci.com/gh/openintegrationhub/contacts-adapter-template)
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](LICENSE)
+
 This is a template for creating an OIH adapter. We recommend using it as the first step of development. The adapter comes with a very a basic architecture which can be used on OIH. Just clone it and get started!
 
 ## Adapter Architecture
