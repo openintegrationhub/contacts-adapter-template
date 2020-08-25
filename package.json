@@ -17,7 +17,7 @@
     "oih"
   ],
   "scripts": {
-    "start": "node ./node_modules/elasticio-sailor-nodejs/run.js",
+    "start": "node ./node_modules/ferryman/runGlobal.js",
     "pretest": "eslint lib test --ext .js --ext .json --fix",
     "test": "NODE_ENV=test mocha test/* --timeout 10000",
     "test-watch": "nodemon --exec \"npm test \""
@@ -31,7 +31,7 @@
     "co": "4.6.0",
     "dotenv": "^8.2.0",
     "elasticio-node": "0.0.9",
-    "elasticio-sailor-nodejs": "2.2.1",
+    "@openintegrationhub/ferryman": "^1.0.1",
     "q": "1.5.1",
     "request": "2.88.0",
     "request-promise": "4.1.1"
@@ -43,7 +43,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-json": "^1.2.1",
     "eslint-plugin-mocha": "^5.2.0",
-    "mocha": "^5.2.0",
+    "mocha": "^8.1.1",
     "nock": "^9.6.1"
   },
   "repository": {
