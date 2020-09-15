@@ -52,12 +52,12 @@ All Node.js adapters get build by NPM `run-script` which checks the configuratio
 
 ```json
 "dependencies": {
-  "elasticio-sailor-nodejs": "^2.2.0",
+  "@openintegrationhub/ferryman": "^1.1.3",
   "elasticio-node": "^0.0.8"
 }
 ```
 
-Sailor is the Node.js SDK of the OIH platform which main role is to make the adapter part of OIH platform and it ensures a smooth communication with the platform.
+Ferryman is the Node.js SDK of the OIH platform which main role is to make the adapter part of OIH platform and it ensures a smooth communication with the platform.
 
 ### component.json
 
@@ -99,10 +99,10 @@ This is the only place where the adapter's functionality gets listed, the so cal
 
 ### Dockerfile
 
-Your adapter should be build as a [Docker image](https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/). That is why this file plays a significant role in the whole process of deploying the adapter on OIH. An **important** part here is the `ENTRYPOINT` where you start your adapter. For this purpose you should have a `start` script in your `package.json` file which specifies the path to the script which runs the sailor:
+Your adapter should be build as a [Docker image](https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/). That is why this file plays a significant role in the whole process of deploying the adapter on OIH. An **important** part here is the `ENTRYPOINT` where you start your adapter. For this purpose you should have a `start` script in your `package.json` file which specifies the path to the script which runs the ferryman:
 
 ```json
-  "start": "./node_modules/elasticio-sailor-nodejs/run.js"
+  "start": "./node_modules/@openintegrationhub/ferryman/runGlobal.js"
 ```
 
 > NOTE: Never use `root` as user in a Dockerfile
