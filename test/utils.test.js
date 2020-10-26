@@ -1,43 +1,76 @@
 /* eslint no-unused-expressions: "off" */
 
 const { expect } = require('chai');
-const { getToken } = require('./../lib/utils/authentication');
-const { configOptions } = require('./seed/seed');
-const { loginSuccessful, loginFailed, loginFailedUser } = require('./seed/utils.seed');
+const nock = require('nock');
+const { getToken, getObjects, upsertObject } = require('./../lib/utils/helpers');
 
-describe('Authorization process', () => {
-  before(async () => {
-    loginSuccessful;
-    loginFailed;
-    loginFailedUser;
-  });
+describe('Helpers', () => {
+  it('should perform a login', async () => {
+    nock('https://api.example.com')
+      .post('/login', { username: 'ExampleUser', password: 'ExamplePassword' })
+      .reply(200, { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' });
 
-  it('should get the token after successful authorization', async () => {
-    const token = await getToken(configOptions);
-    expect(token).to.equal('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-    expect(token).to.not.be.empty;
-    expect(token).to.be.a('string');
-  });
 
-  it('should return 400 if no credentials are given', async () => {
-    const token = await getToken({});
-    expect(token).to.not.be.empty;
-    expect(token.error.error).to.equal('Please enter a valid username and password');
-    expect(token.statusCode).to.equal(400);
-    expect(token.error).to.be.a('object');
-  });
-
-  it('should return 401 if user does not exist', async () => {
-    const credentials = {
-      email: 'doesnotexist@mail.com',
-      password: '!PassW@rD',
+    const cfg = {
+      username: 'ExampleUser',
+      password: 'ExamplePassword',
     };
-    const token = await getToken(credentials);
-    expect(token).to.not.be.empty;
-    expect(token.error.message).to.equal('USER_NOT_FOUND');
-    expect(token.error.hasError).to.equal(true);
-    expect(token.error.errorType).to.equal('Cannot log in');
-    expect(token.statusCode).to.equal(401);
-    expect(token.error).to.be.a('object');
+    const token = await getToken(cfg);
+    expect(token).to.equal('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+  });
+
+  it('should get Objects, filtered by timestamp', async () => {
+    nock('https://api.example.com', { reqheaders: { authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' } })
+      .get('/')
+      .reply(200, [
+        {
+          firstName: 'Jane',
+          lastName: 'Doe',
+          lastUpdate: '2020-10-26T15:44:10+0000',
+        },
+        {
+          firstName: 'Somebody',
+          lastName: 'Else',
+          lastUpdate: '2019-10-26T15:44:10+0000',
+        },
+        {
+          firstName: 'Nobody',
+          middleName: 'of',
+          lastName: 'Note',
+          lastUpdate: '2018-10-26T15:44:10+0000',
+        },
+      ]);
+
+    const objects = await getObjects('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', { lastUpdate: '2019-05-12T15:44:10+0000' });
+
+    expect(objects).to.have.lengthOf(2);
+  });
+
+  it('should dynamically insert an object', async () => {
+    nock('https://api.example.com', { reqheaders: { authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' } })
+      .post('/', { firstName: 'New', lastName: 'Entry' })
+      .reply(201, { id: '4711' });
+
+
+    const { success, responseId } = await upsertObject({ firstName: 'New', lastName: 'Entry' }, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+
+    expect(success).to.be.true;
+    expect(responseId).to.equal('4711');
+  });
+
+  it('should dynamically update an object', async () => {
+    nock('https://api.example.com', { reqheaders: { authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' } })
+      .get('/4711')
+      .reply(200, { id: '4711' });
+
+    nock('https://api.example.com', { reqheaders: { authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' } })
+      .put('/4711', { firstName: 'Updated' })
+      .reply(200, { id: '4711' });
+
+
+    const { success, responseId } = await upsertObject({ firstName: 'Updated' }, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', '4711');
+
+    expect(success).to.be.true;
+    expect(responseId).to.equal('4711');
   });
 });
