@@ -1,6 +1,6 @@
 {
-  "title": "Contacts adapter template",
-  "description": "OIH contacts adapter example",
+  "title": "Connector template",
+  "description": "OIH connector example",
   "docsUrl": "https://github.com/openintegrationhub/contacts-adapter-template",
   "buildType": "docker",
   "credentials": {
@@ -9,14 +9,14 @@
         "label": "Your username",
         "required": true,
         "viewClass": "TextFieldView",
-        "note": "Use your username in <b>Snazzy Contacts</b>",
+        "note": "Your username in the target application",
         "placeholder": "youremail@mail.com"
       },
       "password": {
         "label": "Your password",
         "required": true,
         "viewClass": "PasswordFieldView",
-        "note": "Use your password for <b>Snazzy Contacts</b>"
+        "note": "Your password in the target application"
       }
     }
   },
