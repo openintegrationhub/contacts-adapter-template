@@ -1,6 +1,6 @@
 {
-  "title": "Contacts adapter template",
-  "description": "OIH contacts adapter example",
+  "title": "Connector template",
+  "description": "OIH connector example",
   "docsUrl": "https://github.com/openintegrationhub/contacts-adapter-template",
   "buildType": "docker",
   "credentials": {
@@ -9,86 +9,27 @@
         "label": "Your username",
         "required": true,
         "viewClass": "TextFieldView",
-        "note": "Use your username in <b>Snazzy Contacts</b>",
+        "note": "Your username in the target application",
         "placeholder": "youremail@mail.com"
       },
       "password": {
         "label": "Your password",
         "required": true,
         "viewClass": "PasswordFieldView",
-        "note": "Use your password for <b>Snazzy Contacts</b>"
-      },
-      "API_KEY": {
-        "label": "API_KEY",
-        "required": true,
-        "viewClass": "PasswordFieldView",
-        "note": "Your Snazzy Contacts API_KEY"
-      },
-      "applicationUid": {
-        "label": "Application uid",
-        "required": false,
-        "viewClass": "TextFieldView",
-        "note": "Application uid",
-        "placeholder": "application123456"
-      },
-      "schema": {
-        "label": "Schema",
-        "required": false,
-        "viewClass": "TextFieldView",
-        "note": "Schema from Meta Data Repository",
-        "placeholder": "address"
-      },
-      "domainId": {
-        "label": "Domain Id",
-        "required": false,
-        "viewClass": "TextFieldView",
-        "note": "Domain Id from Meta Data Repository",
-        "placeholder": "5d3031a20cbe7c00115c7d8f"
+        "note": "Your password in the target application"
       }
     }
   },
   "triggers": {
-    "getPersonsPolling": {
-      "title": "Fetch new and updated persons(getPersons - Polling)",
-      "description": "Get Snazzy Contacts persons which have recently been modified or created",
-      "type": "polling",
-      "main": "./lib/triggers/getPersonsPolling.js",
-      "metadata": {
-        "out": "./lib/schemas/getPersons.out.json"
-      }
-    },
-    "getOrganizationsPolling": {
-      "title": "Fetch new and updated organizations(getOrganizations- Polling)",
-      "description": "Get Snazzy Contacts organizations which have recently been modified or created",
-      "type": "polling",
-      "main": "./lib/triggers/getOrganizationsPolling.js",
-      "metadata": {
-        "out": "./lib/schemas/getOrganizations.out.json"
-      }
+    "getObjectsPolling": {
+      "title": "Fetch new and updated objects",
+      "main": "./lib/triggers/getObjects.js"
     }
   },
   "actions": {
-    "upsertPerson": {
-      "title": "Upsert a person in Snazzy Contacts",
-      "main": "./lib/actions/upsertPerson.js",
-      "metadata": {
-        "in": "./lib/schemas/upsertPerson.in.json",
-        "out": "./lib/schemas/upsertPerson.out.json"
-      }
-    },
-    "upsertOrganization": {
-      "main": "./lib/actions/upsertOrganization.js",
-      "title": "Upsert an organization  in Snazzy Contacts",
-      "metadata": {
-        "in": "./lib/schemas/upsertOrganization.in.json"
-      }
-    },
-    "deletePerson": {
-      "main": "./lib/actions/upsertOrganization.js",
-      "title": "Delete an organization in Snazzy Contacts",
-      "metadata": {
-        "in": "./lib/schemas/upsertOrganization.in.json"
-      }
+    "upsertObject": {
+      "title": "Upsert an object in your target application",
+      "main": "./lib/actions/upsertObject.js",
     }
   }
 }

@@ -4,7 +4,7 @@
 [![CircleCI](https://circleci.com/gh/openintegrationhub/contacts-adapter-template.svg?style=svg)](https://circleci.com/gh/openintegrationhub/contacts-adapter-template)
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](LICENSE)
 
-This is a template for creating an OIH adapter. We recommend using it as the first step of development. The adapter comes with a very a basic architecture which can be used on OIH. Just clone it and get started!
+This is a template for creating an OIH connector. We recommend using it as the first step of development. The adapter comes with a very a basic architecture which can be used on OIH. Just clone it and get started!
 
 ## Adapter Architecture
 
@@ -13,47 +13,22 @@ This is a template for creating an OIH adapter. We recommend using it as the fir
 ├── Dockerfile
 ├── lib
 │   ├── actions
-│   │   ├── deleteOrganization.js
-│   │   ├── deletePerson.js
-│   │   ├── upsertOrganization.js
-│   │   └── upsertPerson.js
-│   ├── schemas
-│   │   ├── deleteOrganization.in.json
-│   │   ├── deletePerson.in.json
-│   │   ├── getOrganizations.out.json
-│   │   ├── getPersons.out.json
-│   │   ├── upsertOrganization.in.json
-│   │   ├── upsertOrganization.out.json
-│   │   ├── upsertPerson.in.json
-│   │   └── upsertPerson.out.json
+│   │   └── upsertObject.js
 │   ├── triggers
-│   │   ├── getOrganizationsPolling.js
-│   │   └── getPersonsPolling.js
+│   │   └── getObjects.js
 │   └── utils
-│       ├── authentication.js
-│       ├── helpers.js
-│       ├── resolver.js
-│       └── uids.js
+│       └── helpers.js
 ├── logo.png
 ├── package.json
-├── test
-│   ├── actions.test.js
-│   ├── seed
-│   │   ├── actions.seed.js
-│   │   ├── seed.js
-│   │   ├── triggers.seed.js
-│   │   └── utils.seed.js
-│   ├── triggers.test.js
-│   └── utils.test.js
-└── verifyCredentials.js
+└── test
+    └── utils.test.js
 ```
 
-All Node.js adapters get build by NPM `run-script` which checks the configuration in `package.json` first, then starts initialising the `node` and `npm` versions and builds them. As a next step, the dependencies get downloaded and build. All Node.js adapters must use the following dependencies:
+All Node.js adapters get build by NPM `run-script` which checks the configuration in `package.json` first, then starts initialising the `node` and `npm` versions and builds them. As a next step, the dependencies get downloaded and builr. All Node.js adapters must use this dependeny:
 
 ```json
 "dependencies": {
-  "@openintegrationhub/ferryman": "^1.1.3",
-  "elasticio-node": "^0.0.8"
+  "@openintegrationhub/ferryman": "^1.1.5"
 }
 ```
 
@@ -87,19 +62,25 @@ The file acts as an adapter descriptor which is interpreted by OIH platform to g
     }
   },
   "triggers": {
-
+    "getObjectsPolling": {
+      "title": "Fetch new and updated objects",
+      "main": "./lib/triggers/getObjects.js"
+    }
   },
   "actions": {
-
+    "upsertObject": {
+      "title": "Upsert an object in your target application",
+      "main": "./lib/actions/upsertObject.js",
+    }
   }
 }
 ```
 
-This is the only place where the adapter's functionality gets listed, the so called **triggers** and **actions**. It also defines fields which the user should provide for authentication. In this example the user should provide `username` and `password`. The whole verification process is in the `verifyCredentials.js` file.
+This is the only place where the adapter's functionality gets listed, the so called **triggers** and **actions**. As a general rule, a **trigger** fetches data from an extrenal source and passes it forward. An **action** receives data, then modifies and/or sends it to an external destination. It also defines fields which the user should provide for authentication. In this example the user should provide `username` and `password`.
 
 ### Dockerfile
 
-Your adapter should be build as a [Docker image](https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/). That is why this file plays a significant role in the whole process of deploying the adapter on OIH. An **important** part here is the `ENTRYPOINT` where you start your adapter. For this purpose you should have a `start` script in your `package.json` file which specifies the path to the script which runs the ferryman:
+Your adapter should be built as a [Docker image](https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/). That is why this file plays a significant role in the whole process of deploying the adapter on OIH. An **important** part here is the `ENTRYPOINT` where you start your adapter. For this purpose you should have a `start` script in your `package.json` file which specifies the path to the script which runs the ferryman:
 
 ```json
   "start": "./node_modules/@openintegrationhub/ferryman/runGlobal.js"
@@ -109,41 +90,27 @@ Your adapter should be build as a [Docker image](https://docs.docker.com/v17.09/
 
 ### lib
 
-This directory contains sub-directories such as **actions**, **triggers**, **schemas** and **utils** which were already defined in `component.json` file.
+This directory contains sub-directories such as **actions**, **triggers**, and **utils** which were defined in `component.json` file.
 The Node.js sources are in the sub-directories `lib/actions` and `lib/triggers`. The JSON schemas defining the adapter’s metadata are in the sub-directory `lib/schemas`. The `utils` directory mainly contains some helper functions which are used from **actions** and **triggers**.
 
 ## Actions and triggers
-This template **adapter** supports the following **actions** and **triggers**:
+This template connector supports the following **actions** and **triggers**:
 
 #### Triggers:
-  - Get organizations - polling (```getOrganizationsPolling.js```)
-  - Get persons - polling (```getPersonsPolling.js```)
+  - Get objects (```getObjects.js```)
 
-  All triggers are of type '*polling'* which means that the **trigger** will be scheduled to execute periodically. It will fetch only these objects from the database that have been modified or created since the previous execution. Then it will emit one message per object that changes or is added since the last polling interval. For this case at the very beginning we just create an empty `snapshot` object. Later on we attach ``lastUpdated`` to it. At the end the entire object should be emitted as the message body.
+  By default, a trigger is executed periodically in regular intervals. This one will fetch a data set from a remote endpoint, and emit one message for each data object it received. To ensure that it does not repeatedly emit the same objects in every interval, a snapshot is used. After each execution, it saves the most recent `lastUpdated` timestamp of the received objects. In the next execution, this timestamp is then used to only pass forward objects that have been updated since the last one.
 
 #### Actions:
-  - Delete organization (```deleteOrganization.js```)
-  - Delete person (```deletePerson.js```)
-  - Upsert organization(```upsertOrganization.js```)
-  - Upsert person (```upsertPerson.js```)
+  - Upsert object (```upsertObject.js```)
+  
+  An action is executed whenever it receives data from another component in the same flow. This one takes the data it receives and sends it to a remote endpoint. As it is a `upsert` action, it dynamically decides whether to insert a new object into the target application, or to update an existing one. To do this, it checks whether the message's `metadata` contains a `recordUid`. If this is the case, it checks whether an object with that identifier is already present in its system. It this is the case it performs an update on that object, otherwise it performs an insert.
 
-### Logo
-
-If you have a logo for your adapter, you can place a file called `logo.png` in the root directory of your adapter. In case you don't provide a logo, a generic one will be shown.
 
 ### Test
 
 This directory consists of test files and seed data for testing purposes. Tests are not mandatory, but we highly recommend you to test the functionality before you deploy the adapter.
 
-### verifyCredentials.js
-
-This file should contain the main verification mechanism for all Node.js. When you create an OIH adapter you may allow users to check entered credentials for validation, during the integration flow creation. This credential verification is optional but makes the flow more usable and reliable. To ensure that the platform can find and execute the verification method make sure that:  
- - `verifyCredentials.js` is in the **root of the folder structure**
- - `verifyCredentials.js` file is a [common.js module](http://wiki.commonjs.org/wiki/Modules/1.1)
- - it returns one function that accepts **two parameters**: credentials and cb (callback).  
- - All the credentials for verification get passed through **credentials** parameter which is an object. This object can contain the properties that match or correspond to the account definition parameters from the `component.json`.
-
-You can directly use the skeleton structure of `verifyCredentials.js` as a starting point to your own file.
 
 ## Deployment
 
@@ -157,17 +124,6 @@ docker push openintegrationhub/NAME[:TAG]
 
 Within the Open Integration Hub framework, the [Component Repository](https://openintegrationhub.github.io/docs/Services/ComponentRepository.html) is the place which lists all components your user can access, by referencing the docker images.
 
-## Getting Started
-
-This adapter example is developed and tested with [Snazzy Contacts API](https://snazzycontacts.com). If you want to build a flow using this example, you could use these test credentials when you are building the flow:
-
-```
-  username: oihtestaccount@oih.com
-  password: OIHtest@
-
-```
-
-To run the tests locally just run `npm test`.
 
 ## License
 
