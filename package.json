@@ -39,7 +39,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-json": "^1.2.1",
     "eslint-plugin-mocha": "^5.2.0",
-    "mocha": "^8.1.1",
+    "mocha": "^8.4.0",
     "nock": "^9.6.1"
   },
   "repository": {
